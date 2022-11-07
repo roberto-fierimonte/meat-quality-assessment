@@ -38,7 +38,7 @@
 
 Food waste is a big problem in our world.
 
-The goal of this project is to build a Machine Learning model that predicts whether meat is edible or rotten and could therefore be consumed.
+The goal of this project is to build a Machine Learning model that predicts whether meat is fresh or spoiled and can therefore be consumed.
 
 The dataset used in this project was originally built for this [research paper](https://ieeexplore.ieee.org/abstract/document/8946388) and subsequently made available on [Kaggle](https://www.kaggle.com/datasets/crowww/meat-quality-assessment-based-on-deep-learning).
 
@@ -48,8 +48,8 @@ The dataset used in this project was originally built for this [research paper](
 
 ### Prerequisites
 - Python 3.9
-- [poetry](https://python-poetry.org/)
-- [Kaggle](https://www.kaggle.com/) account
+- [poetry](https://python-poetry.org/) (we are using version `1.2.2` for this project)
+- A [Kaggle](https://www.kaggle.com/) account
 
 Since the dataset is hosted on Kaggle and not provided with the repository, it is not possible to run this code without having a Kaggle account.
 
