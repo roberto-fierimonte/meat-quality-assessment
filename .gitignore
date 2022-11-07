@@ -1,5 +1,6 @@
 # Repository-specific files
 kaggle.json
+notebooks/output/
 
 # Node artifact files
 node_modules/
