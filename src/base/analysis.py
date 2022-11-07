@@ -1,5 +1,4 @@
 import os
-import glob
 from typing import Optional
 
 import numpy as np
@@ -7,73 +6,46 @@ import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import seaborn as sns
 
+from loguru import logger
 
-def _sample_images(
-    data_path: os.PathLike, n_samples: int, seed: Optional[int] = None
-) -> list:
-    """Sample a number of images from a root folder and its subfolders.
+from src.base.utilities import sample_images
 
-    Args:
-        data_path (os.PathLike): Root folder from where to sample the images
-        n_samples (int): Number of images to sample. Must be greater than or equal to 1
-        seed (int, optional): Seed for the random number generator used in the sampling.
-            Defaults to None
-
-    Raises:
-        ValueError: If any of the input parameters is incorrect
-
-    Returns:
-        list: list of paths of the sampled images
-    """
-    try:
-        assert n_samples >= 1
-    except AssertionError:
-        msg = "The number of samples must be greater than or equal to 1."
-        raise ValueError(msg)
-
-    if not data_path.endswith("/"):
-        data_path += "/"
-    rng = np.random.default_rng(seed=seed)
-    samples = rng.choice(
-        [
-            os.path.join(data_path, f)
-            for f in glob.iglob(data_path + "**/*.jpg", recursive=True)
-        ],
-        size=n_samples,
-        replace=False,
-    )
-    return samples
+IMG_HEIGHT = 720
+IMG_WIDTH = 1280
+IMG_CHANNELS = ("R", "G", "B")
+IMG_LABELS = ("Fresh", "Spoiled")
+LABELS_COLOURS = ("green", "red")
 
 
-def display_images(data_path: os.PathLike, dataset_name: str, seed: int = 456) -> None:
+def display_images(data_path: os.PathLike, seed: int = 456, save_path: Optional[os.PathLike] = None) -> None:
     """Display a sample of images.
 
     Args:
         data_path (os.PathLike): Root folder from where to sample the images
-        dataset_name(str): Name of the dataset being sample (it will appear in the
-            title of the plot)
         seed (int, optional): Seed for the random number generator used in the sampling.
             Defaults to 456
+        save_path (os.PathLike, optional): Folder (not file name) where to save the plots.
+            If not provided the plot will not be saved. Defaults to None
     """
-    samples = _sample_images(data_path, n_samples=9, seed=seed)
+    fnames = sample_images(data_path, n_samples=9, seed=seed)
     fig, axs = plt.subplots(nrows=3, ncols=3, figsize=(20, 13))
-    for e, s in enumerate(samples):
-        axs.flatten()[e].imshow(mpimg.imread(s))
+    for e, fn in enumerate(fnames):
+        axs.flatten()[e].imshow(mpimg.imread(fn))
         axs.flatten()[e].set_axis_off()
 
-        if "Fresh" in s:
-            axs.flatten()[e].set_title("Fresh", color="green", fontsize=16)
-        elif "Spoiled" in s:
-            axs.flatten()[e].set_title("Spoiled", color="red", fontsize=16)
+        for lab, col in zip(IMG_LABELS, LABELS_COLOURS):
+            if lab in fn:
+                axs.flatten()[e].set_title(lab, color=col, fontsize=16)
 
-    fig.suptitle(f"Samples of {dataset_name}", fontsize=20)
+    fig.suptitle("Samples of the dataset", fontsize=20)
     plt.tight_layout()
     plt.show()
 
+    if save_path is not None:
+        fig.savefig(os.path.join(save_path, "samples.pdf"))
 
-def display_rgb_images(
-    data_path: os.PathLike, dataset_name: str, seed: int = 456
-) -> None:
+
+def display_rgb_images(data_path: os.PathLike, seed: int = 456, save_path: Optional[os.PathLike] = None) -> None:
     """Display a sample of images decomposing them into their RGB components.
 
     Args:
@@ -82,27 +54,27 @@ def display_rgb_images(
             title of the plot)
         seed (int, optional): Seed for the random number generator used in the sampling.
             Defaults to 456
+        save_path (os.PathLike, optional): Folder (not file name) where to save the plots.
+            If not provided the plot will not be saved. Defaults to None
     """
-    samples = _sample_images(data_path, n_samples=6, seed=seed)
-    colors = ("r", "g", "b")
-    fig, axs = plt.subplots(nrows=6, ncols=6, figsize=(28, 16), constrained_layout=True)
-    for e, s in enumerate(samples):
-        sample = mpimg.imread(s)
+    fnames = sample_images(data_path, n_samples=6, seed=seed)
+    fig, axs = plt.subplots(nrows=6, ncols=6, figsize=(28, 16), sharex="col", sharey="col", constrained_layout=True)
+    for e, fn in enumerate(fnames):
+        sample = mpimg.imread(fn)
         axs[e][0].imshow(sample)
         axs[e][0].set_yticklabels([])
         axs[e][0].set_xticklabels([])
         axs[e][0].set_xticks([])
         axs[e][0].set_yticks([])
 
-        if "Fresh" in s:
-            axs[e][0].set_xlabel("Fresh", color="green")
-        elif "Spoiled" in s:
-            axs[e][0].set_xlabel("Spoiled", color="red")
+        for lab, col in zip(IMG_LABELS, LABELS_COLOURS):
+            if lab in fn:
+                axs[e][0].set_xlabel(lab, color=col)
 
-        for cid, colour in enumerate(colors):
+        for cid, colour in enumerate(IMG_CHANNELS):
             axs[e][cid + 1].imshow(sample[:, :, cid])
             axs[e][cid + 1].set_xlabel(
-                f"Mean {colour.upper()} value: {np.mean(sample[:, :, cid]):,.1f}"
+                f"Mean {colour} value: {np.mean(sample[:, :, cid]):,.1f}"
             )
             axs[e][cid + 1].set_yticklabels([])
             axs[e][cid + 1].set_xticklabels([])
@@ -110,19 +82,60 @@ def display_rgb_images(
             axs[e][cid + 1].set_yticks([])
 
             histogram, _ = np.histogram(sample[:, :, cid], bins=256, range=(0, 256))
-            sns.histplot(histogram, ax=axs[e][4], color=colour)
-            sns.lineplot(histogram, ax=axs[e][5], color=colour)
+            sns.histplot(histogram, ax=axs[e][4], color=colour.lower())
+            sns.lineplot(histogram, ax=axs[e][5], color=colour.lower())
             axs[e][4].set_xlabel("Pixels in bin")
             axs[e][4].set_ylabel("Number of bins")
             axs[e][5].set_xlabel("Colour value")
             axs[e][5].set_ylabel("Pixels")
 
-    axs[0][0].set_title("Original Image", fontsize=16)
-    axs[0][1].set_title("R Channel", fontsize=16)
-    axs[0][2].set_title("G Channel", fontsize=16)
-    axs[0][3].set_title("B Channel", fontsize=16)
+    for cid, colour in enumerate(IMG_CHANNELS):
+        axs[0][cid + 1].set_title(f"{colour} Channel", fontsize=16)
 
-    fig.suptitle(f"Samples of {dataset_name} in RGB", fontsize=20)
-    # plt.tight_layout(pad=0.3)
-    # plt.subplots_adjust()
+    axs[0][0].set_title("Original Image", fontsize=16)
+
+    fig.suptitle("Samples of the dataset in RGB", fontsize=20)
     plt.show()
+
+    if save_path is not None:
+        fig.savefig(os.path.join(save_path, "samples_rgb.pdf"))
+
+
+def rgb_stats_by_label(data_path: os.PathLike, save_path: Optional[os.PathLike] = None) -> None:
+    """Plot aggregated RGB statistics according to the image labels.
+
+    Args:
+        data_path (os.PathLike): Root folder from where to read the images
+        save_path (os.PathLike, optional): Folder (not file name) where to save the plots.
+            If not provided the plot will not be saved. Defaults to None
+    """
+    fnames = sample_images(data_path, n_samples=-1)
+
+    imgs = dict()
+    for lab in IMG_LABELS:
+        fnames_lab = [fn for fn in fnames if lab in fn]
+        # Pre allocate memory space to read the images, so that we don't have to constantly create
+        # new arrays when reading the samples one by one.
+        imgs[lab] = np.zeros((len(IMG_CHANNELS), 256), dtype=np.float64)
+        for e, fn in enumerate(fnames_lab):
+            img = mpimg.imread(fn)
+            for cid, colour in enumerate(IMG_CHANNELS):
+                imgs[lab][cid, :] += np.histogram(img[:, :, cid], bins=256, range=(0, 256))[0]
+
+    logger.debug("Images loaded")
+
+    fig, axs = plt.subplots(nrows=1, ncols=len(IMG_LABELS), figsize=(20, 6), sharey=True, constrained_layout=True)
+
+    for cid, colour in enumerate(IMG_CHANNELS):
+        for e, lab in enumerate(IMG_LABELS):
+            sns.lineplot(imgs[lab][cid], ax=axs[e], color=colour.lower())
+
+            axs[e].set_xlabel("Colour value")
+            axs[e].set_ylabel("Pixels")
+            axs[e].set_title(f"Label: {lab}")
+
+    fig.suptitle("RGB Statistics of the dataset")
+    plt.show()
+
+    if save_path is not None:
+        fig.savefig(os.path.join(save_path, "stats_rgb.pdf"))
