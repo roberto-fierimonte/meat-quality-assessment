@@ -24,9 +24,11 @@ def sample_images(
         np.array: array of paths of the sampled images
     """
     try:
-        assert (n_samples == -1 or n_samples >= 1)
+        assert n_samples == -1 or n_samples >= 1
     except AssertionError:
-        msg = "The number of samples must be equal to -1, or greater than or equal to 1."
+        msg = (
+            "The number of samples must be equal to -1, or greater than or equal to 1."
+        )
         raise ValueError(msg)
 
     if not data_path.endswith("/"):

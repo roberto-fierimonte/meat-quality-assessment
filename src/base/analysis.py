@@ -17,7 +17,9 @@ IMG_LABELS = ("Fresh", "Spoiled")
 LABELS_COLOURS = ("green", "red")
 
 
-def display_images(data_path: os.PathLike, seed: int = 456, save_path: Optional[os.PathLike] = None) -> None:
+def display_images(
+    data_path: os.PathLike, seed: int = 456, save_path: Optional[os.PathLike] = None
+) -> None:
     """Display a sample of images.
 
     Args:
@@ -45,7 +47,9 @@ def display_images(data_path: os.PathLike, seed: int = 456, save_path: Optional[
         fig.savefig(os.path.join(save_path, "samples.pdf"))
 
 
-def display_rgb_images(data_path: os.PathLike, seed: int = 456, save_path: Optional[os.PathLike] = None) -> None:
+def display_rgb_images(
+    data_path: os.PathLike, seed: int = 456, save_path: Optional[os.PathLike] = None
+) -> None:
     """Display a sample of images decomposing them into their RGB components.
 
     Args:
@@ -58,7 +62,14 @@ def display_rgb_images(data_path: os.PathLike, seed: int = 456, save_path: Optio
             If not provided the plot will not be saved. Defaults to None
     """
     fnames = sample_images(data_path, n_samples=6, seed=seed)
-    fig, axs = plt.subplots(nrows=6, ncols=6, figsize=(28, 16), sharex="col", sharey="col", constrained_layout=True)
+    fig, axs = plt.subplots(
+        nrows=6,
+        ncols=6,
+        figsize=(28, 16),
+        sharex="col",
+        sharey="col",
+        constrained_layout=True,
+    )
     for e, fn in enumerate(fnames):
         sample = mpimg.imread(fn)
         axs[e][0].imshow(sample)
@@ -101,7 +112,9 @@ def display_rgb_images(data_path: os.PathLike, seed: int = 456, save_path: Optio
         fig.savefig(os.path.join(save_path, "samples_rgb.pdf"))
 
 
-def rgb_stats_by_label(data_path: os.PathLike, save_path: Optional[os.PathLike] = None) -> None:
+def rgb_stats_by_label(
+    data_path: os.PathLike, save_path: Optional[os.PathLike] = None
+) -> None:
     """Plot aggregated RGB statistics according to the image labels.
 
     Args:
@@ -120,11 +133,19 @@ def rgb_stats_by_label(data_path: os.PathLike, save_path: Optional[os.PathLike] 
         for e, fn in enumerate(fnames_lab):
             img = mpimg.imread(fn)
             for cid, colour in enumerate(IMG_CHANNELS):
-                imgs[lab][cid, :] += np.histogram(img[:, :, cid], bins=256, range=(0, 256))[0]
+                imgs[lab][cid, :] += np.histogram(
+                    img[:, :, cid], bins=256, range=(0, 256)
+                )[0]
 
     logger.debug("Images loaded")
 
-    fig, axs = plt.subplots(nrows=1, ncols=len(IMG_LABELS), figsize=(20, 6), sharey=True, constrained_layout=True)
+    fig, axs = plt.subplots(
+        nrows=1,
+        ncols=len(IMG_LABELS),
+        figsize=(20, 6),
+        sharey=True,
+        constrained_layout=True,
+    )
 
     for cid, colour in enumerate(IMG_CHANNELS):
         for e, lab in enumerate(IMG_LABELS):

@@ -24,4 +24,4 @@ We have different notebooks corresponding to the different phases in the develop
 | Name             | Description                                                       |
 | :--------------- |:----------------------------------------------------------------- |
 | 1-eda.ipynb      | To run exploratory data analysis on the input data.               |
-| 2-training.ipynb | To build preprocessing pipeline and build a classification model. | 
+| 2-training.ipynb | To build preprocessing pipeline and build a classification model. |
