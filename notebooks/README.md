@@ -21,7 +21,8 @@ All the notebooks in this repository have their output stripped out to avoid pus
 
 We have different notebooks corresponding to the different phases in the development of the project, covering from initial EDA to training and predicting. Below there is a short description of each notebook in this folder:
 
-| Name             | Description                                                       |
-| :--------------- |:----------------------------------------------------------------- |
-| 1-eda.ipynb      | To run exploratory data analysis on the input data.               |
-| 2-training.ipynb | To build preprocessing pipeline and build a classification model. |
+| Name             | Description                                                         |
+| :--------------- |:------------------------------------------------------------------- |
+| 1-eda.ipynb      | To run exploratory data analysis on the input data.                 |
+| 2-training.ipynb | To build preprocessing pipeline and build a classification model.   |
+| 3-predict.ipynb  | To generate some prediction on unseen data using the trained model. |
