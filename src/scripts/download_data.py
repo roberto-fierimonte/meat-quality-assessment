@@ -1,6 +1,6 @@
 import opendatasets as od
 
-DATASET_URL = """https://www.kaggle.com/datasets/crowww/meat-quality-assessment-based-on-deep-learning"""
+DATASET_URL = "https://www.kaggle.com/datasets/crowww/meat-quality-assessment-based-on-deep-learning"
 DATA_FOLDER = "data"
 
 

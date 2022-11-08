@@ -51,7 +51,7 @@ class CNNModel(tf.keras.Model):
         x = self.dense2(x)
         return x
 
-    @classmethod
+    @staticmethod
     def load_model(file_name: os.PathLike) -> tf.keras.Model:
         """Load the pre-trained model from a source.
 
