@@ -44,7 +44,9 @@ def display_images(
     plt.show()
 
     if save_path is not None:
-        fig.savefig(os.path.join(save_path, "samples.pdf"))
+        fname = os.path.join(save_path, "samples.pdf")
+        fig.savefig(fname)
+        logger.debug(f"Saved plot to {fname}.")
 
 
 def display_rgb_images(
@@ -109,7 +111,9 @@ def display_rgb_images(
     plt.show()
 
     if save_path is not None:
-        fig.savefig(os.path.join(save_path, "samples_rgb.pdf"))
+        fname = os.path.join(save_path, "samples_rgb.pdf")
+        fig.savefig(fname)
+        logger.debug(f"Saved plot to {fname}.")
 
 
 def rgb_stats_by_label(
@@ -159,4 +163,6 @@ def rgb_stats_by_label(
     plt.show()
 
     if save_path is not None:
-        fig.savefig(os.path.join(save_path, "stats_rgb.pdf"))
+        fname = os.path.join(save_path, "stats_rgb.pdf")
+        fig.savefig(fname)
+        logger.debug(f"Saved plot to {fname}.")

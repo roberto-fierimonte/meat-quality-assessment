@@ -1,5 +1,9 @@
+import os
+
 import tensorflow as tf
 from tensorflow.keras import layers
+
+from loguru import logger
 
 
 class CNNModel(tf.keras.Model):
@@ -24,7 +28,9 @@ class CNNModel(tf.keras.Model):
 
         self.flatten = layers.Flatten()
         self.dense1 = layers.Dense(64, activation="relu")
-        self.dense2 = layers.Dense(2)
+        self.dense2 = layers.Dense(2, activation="softmax")
+
+        logger.debug("Initialised model.")
 
     def call(self, inputs: tf.Tensor) -> tf.Tensor:
         """Call the model on some inputs and return the output.
@@ -44,3 +50,28 @@ class CNNModel(tf.keras.Model):
         x = self.dense1(x)
         x = self.dense2(x)
         return x
+
+    @classmethod
+    def load_model(file_name: os.PathLike) -> tf.keras.Model:
+        """Load the pre-trained model from a source.
+
+        Args:
+            file_name (os.PathLike): Path from where the model will be loaded.
+
+        Returns:
+            tf.keras.Model: The pre-trained model.
+        """
+        model = tf.keras.models.load_model(file_name)
+        logger.info(f"Loaded model from {file_name}.")
+        return model
+
+    def save_model(self, file_name: os.PathLike) -> None:
+        """Save the pre-trained model to a target.
+
+        Args:
+            file_name (os.PathLike): Path where the model will be saved to.
+        """
+        directory = os.path.join(file_name, os.path.pardir)
+        os.makedirs(directory, exist_ok=True)
+        self.save(file_name)
+        logger.info(f"Saved model to {file_name}.")
