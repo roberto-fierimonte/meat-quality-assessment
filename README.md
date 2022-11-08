@@ -66,7 +66,7 @@ In the repository, execute:
     3. Click on Create a new API token
     4. This will prompt you to download the `kaggle.json` file into your system
     5. Move the file into the root folder of the repository, and we will use it in the next step
-5. Download the dataset by running `poetry run python src/scripts/setup_data.py`
+5. Download the dataset by running `make download-data`
 
 ### Notebooks
 
