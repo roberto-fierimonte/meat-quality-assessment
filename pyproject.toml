@@ -1,6 +1,6 @@
 [tool.commitizen]
 name = "cz_conventional_commits"
-version = "0.1.0"
+version = "1.0.0"
 tag_format = "v$major.$minor.$patch"
 update_changelog_on_bump = true
 version_files = [
@@ -10,7 +10,7 @@ version_files = [
 
 [tool.poetry]
 name = "meat-quality-assessment"
-version = "0.1.0"
+version = "1.0.0"
 description = "Deep Learning model to assess the quality of red meat based on sample photos."
 authors = ["Roberto Fierimonte <roberto.fierimonte@gmail.com>"]
 readme = "README.md"
