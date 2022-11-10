@@ -51,6 +51,18 @@ class CNNModel(tf.keras.Model):
         x = self.dense2(x)
         return x
 
+    def predict_class(self, x: tf.Tensor) -> tf.Tensor:
+        """Predict the most likely class given the input images.
+
+        Args:
+            x (tf.Tensor): Inputs to the model
+
+        Returns:
+            tf.Tensor: Most likely class (as an integer)
+                for each input
+        """
+        return tf.math.argmax(self.predict(x), axis=1)
+
     @staticmethod
     def load_model(file_name: os.PathLike) -> tf.keras.Model:
         """Load the pre-trained model from a source.

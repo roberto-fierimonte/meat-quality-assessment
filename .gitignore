@@ -1,6 +1,8 @@
 # Repository-specific files
 kaggle.json
 notebooks/output/
+model/*
+!/model/.gitkeep
 
 # Node artifact files
 node_modules/

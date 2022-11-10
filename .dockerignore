@@ -1,0 +1,8 @@
+docs/
+notebooks/
+data/
+containers/
+.dockerignore
+__pycache__
+.pytest_cache
+kaggle.json.example

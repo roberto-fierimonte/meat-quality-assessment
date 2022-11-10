@@ -3,12 +3,32 @@ import logging
 
 
 class MessageIsNormal(logging.Filter):
+    """Helper class for gunicorn logging."""
+
     def filter(self, record: logging.LogRecord) -> bool:
+        """Filter records based on their levels.
+
+        Args:
+            record (logging.LogRecord): Logger record
+
+        Returns:
+            bool: True if the record is not an error, False otherwise
+        """
         return record.levelname in ["DEBUG", "INFO", "WARNING"]
 
 
 class MessageIsError(logging.Filter):
+    """Helper class for gunicorn logging."""
+
     def filter(self, record: logging.LogRecord) -> bool:
+        """Filter records based on their levels.
+
+        Args:
+            record (logging.LogRecord): Logger record
+
+        Returns:
+            bool: True if the record is an error, False otherwise
+        """
         return record.levelname in ["ERROR", "CRITICAL"]
 
 
@@ -24,12 +44,8 @@ logconfig_dict = {
         }
     },
     "filters": {
-        "require_message_is_normal": {
-            "()": "src.serving_api.config.MessageIsNormal"
-        },
-        "require_message_is_error": {
-            "()": "src.serving_api.config.MessageIsError"
-        }
+        "require_message_is_normal": {"()": "src.serving_api.config.MessageIsNormal"},
+        "require_message_is_error": {"()": "src.serving_api.config.MessageIsError"},
     },
     "handlers": {
         "console_stdout": {
@@ -37,36 +53,28 @@ logconfig_dict = {
             "filters": ["require_message_is_normal"],
             "class": "logging.StreamHandler",
             "formatter": "simple",
-            "stream": sys.stdout
+            "stream": sys.stdout,
         },
         "console_stderr": {
             "level": "DEBUG",
             "filters": ["require_message_is_error"],
             "class": "logging.StreamHandler",
             "formatter": "simple",
-            "stream": sys.stderr
-        }
+            "stream": sys.stderr,
+        },
     },
     "loggers": {
-        "": {
-            "handlers": ["console_stdout", "console_stderr"],
-            "level": "INFO"
-        },
-        "gunicorn": {
-            "handlers": ["console_stdout"],
-            "level": "INFO"
-        },
-        "gunicorn.access": {
-            "handlers": ["console_stdout"],
-            "level": "INFO"
-        },
+        "": {"handlers": ["console_stdout", "console_stderr"], "level": "INFO"},
+        "gunicorn": {"handlers": ["console_stdout"], "level": "INFO"},
+        "gunicorn.access": {"handlers": ["console_stdout"], "level": "INFO"},
         "gunicorn.error": {
             "handlers": ["console_stdout", "console_stderr"],
-            "level": "INFO"
-        }
+            "level": "INFO",
+        },
+        "tensorflow": {
+            "handlers": ["console_stdout", "console_stderr"],
+            "level": "INFO",
+        },
     },
-    "root": {
-        "level": "INFO",
-        "handlers": ["console_stdout", "console_stderr"]
-    }
+    "root": {"level": "INFO", "handlers": ["console_stdout", "console_stderr"]},
 }
