@@ -77,9 +77,9 @@ meat-quality-assessment
 - The `model` folder is empty and it will be populated with the serialised model files after running the training notebook
 - The `notebooks` folder contains the notebooks for exploratory analysis over the data, as well as the training and testing of the model
 - The `src` folder contains the source code for the project:
-   - The `base` subfolder contains the code used for the exploratory analysis and the model
-   - The `scripts` subfolder contains the script to download the dataset
-   - The `serving_api` subfolder contains the code to run the serving API
+     * The `base` subfolder contains the code used for the exploratory analysis and the model
+     * The `scripts` subfolder contains the script to download the dataset
+     * The `serving_api` subfolder contains the code to run the serving API
 
 ### Local setup
 
