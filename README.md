@@ -112,8 +112,10 @@ See [Notebooks README](notebooks/README.md) for more information about how to us
 A trained model is not provided with this repository. To train the model please the [training notebook](notebooks/2-training.ipynb) end to end. That will save the model in the [model](model/) folder for it to be used to predict new images.
 
 To test the trained model you have two options:
+
 1. You can run the [prediction notebook](notebooks/3-predict.ipynb). This will make a batch prediction of a test set of images not used during training
 2. You can use the REST API to provide an image file to the model to scored:
+
     * Run `make run-server` to run the REST API in a Docker container, or
     * Run `make run-server-local` to run the REST API through `gunicorn` on your machine (this solution does not work on Windows due to the limitations of `gunicorn`)
     * In a different shell window, run `make test-api image=<image-path>`, where `image_path` is the path of the image that you want to score. We provided an example image that can be scored by running `make test-api image=example.jpg`, however you can score any image by passing its path
